@@ -44,7 +44,7 @@ limit_file = {
             'DN3062':'100000',
             'DN3078':'50000',
             'DN3084':'50000',
-            'DN1970':'1000000',
+            'DN1970':'700000',
             'N191':'50000',
             'D1838':'300000',
             'D1938':'300000',
@@ -66,6 +66,44 @@ limit_file = {
             'NK1259':'400000',
             'NK1234':'50000'
          }
+
+#dictionary to store mobile code
+mobile_code = {
+            'D716':'37551',
+            'D792':'542',
+            'D1827':'11079',
+            'D1842':'3611',
+            'D1876':'17',
+            'D1889':'996',
+            'D1899':'0',
+            'D1910':'298',
+            'D1911':'9856',
+            'D1920':'3997',
+            'D1986':'36597',
+            'D1991':'0',
+            'D2034':'10829',
+            'C2924':'1763',
+            'C2927':'60',
+            'C3021':'233',
+            'C3023':'0',
+            'C3055':'129452',
+            'C3089':'33990',
+            'C3091':'18',
+            'C3118':'13168',
+            'C3119':'16775',
+            'C3149':'364',
+            'C3182':'98',
+            'C3200':'325',
+            'C3211':'5478',
+            'C3216':'0',
+            'C3283':'0',
+            'C3284':'1500',
+            'K62':'215876',
+            'K97':'40',
+            'K187':'0',
+            'K200':'8449',
+            'K214':'399'
+        }
 
 
 
@@ -91,7 +129,7 @@ def grad_date():
 
     file_start = str(y) + date_list[1] + date_list[0]
     file_end = "*.xml"
-    os.chdir('\\\\150.1.62.26\\2021\MAR-21')
+    os.chdir('\\\\150.1.62.26\\2021\APR-21')
     
     #creating folder in required destination using date format
     if not os.path.exists(date_c):
@@ -103,13 +141,13 @@ def grad_date():
     #src = "E:\Projects\LimitPY\FinalProjectBefore_run\src\\"
     #dst = "E:\Projects\LimitPY\FinalProjectBefore_run\dst"
 
-    dst = "\\\\150.1.62.26\\2021\MAR-21\\" + date_c
+    dst = "\\\\150.1.62.26\\2021\APR-21\\" + date_c
     #dst = "\\\\150.1.62.26\\2021\MAR-21\\" + "test"
 
     cmd = "copy " + src + file_start + file_end +' '+ dst
     os.system(cmd)
 
-    os.chdir('\\\\150.1.62.26\\2021\MAR-21\\'+ date_c)
+    os.chdir('\\\\150.1.62.26\\2021\APR-21\\'+ date_c)
 
     cli_files = os.listdir('.')
 
@@ -120,17 +158,24 @@ def grad_date():
 
     tree = ET.parse(xml_to_read)
     root = tree.getroot()
-
+    print('Client Code', '\t\t[Old]', '\t\t[New]')
     for limit in root.findall('Limits'):            # using root.findall() to avoid removal during traversal
         client = str(limit.find('ClientCode').text)
         cash = limit.find('Cash').text
 
         new_cash = limit_file.get(client,'noNeed')  #collecting cash limit if required to change
         #print(client,': ',new_cash)
+
+        mobile_limit = mobile_code.get(client,'noNeed') #collecting mobile limit 
         
         if new_cash !='noNeed' and int(new_cash) > int(cash):
             limit.find('Cash').text = new_cash
-            print(client, ': [Old]',cash, ': [New]',new_cash)
+            print(client, '\t\t',cash, '\t\t',new_cash)
+
+        if mobile_limit != 'noNeed':
+            limit.find('Cash').text = mobile_limit
+            print(client, '\t\t',cash, '\t\t',mobile_limit, '\tMobile code')
+
         
     tree.write('new.xml')
 
@@ -145,6 +190,7 @@ def grad_date():
     formatXML.write(firstLine)
     formatXML.write(content)
     formatXML.close()
+    print("Done")
 
 
 
