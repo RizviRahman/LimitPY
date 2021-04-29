@@ -64,45 +64,39 @@ limit_file = {
             'NK1067':'300000',
             'NK1032':'500000',
             'NK1259':'400000',
-            'NK1234':'50000'
+            'NK1052':'85500',
+            'NK1054':'427000',
+            'NC125':'350000',
+            'NC545':'273000',
+            'DN2999':'200000',
+            'DN2681':'300000',
+            'DN2882':'300000',
+            'NK1234':'250000'
          }
 
 #dictionary to store mobile code
 mobile_code = {
             'D716':'37551',
-            'D792':'542',
             'D1827':'11079',
-            'D1842':'3611',
-            'D1876':'17',
+            'D1842':'845',
+            'D1876':'1373',
             'D1889':'996',
-            'D1899':'0',
-            'D1910':'298',
+            'D1910':'1278',
             'D1911':'9856',
-            'D1920':'3997',
-            'D1986':'36597',
-            'D1991':'0',
-            'D2034':'10829',
-            'C2924':'1763',
-            'C2927':'60',
+            'D1920':'35761',
+            'D1986':'7876',
+            'C1781':'48',
+            'C2927':'459',
             'C3021':'233',
             'C3023':'0',
-            'C3055':'129452',
-            'C3089':'33990',
-            'C3091':'18',
+            'C3091':'1283',
             'C3118':'13168',
-            'C3119':'16775',
+            'C3119':'24741',
             'C3149':'364',
             'C3182':'98',
-            'C3200':'325',
-            'C3211':'5478',
-            'C3216':'0',
-            'C3283':'0',
-            'C3284':'1500',
-            'K62':'215876',
-            'K97':'40',
-            'K187':'0',
-            'K200':'8449',
-            'K214':'399'
+            'C3200':'237987',
+            'K200':'315',
+            'K214':'1324'
         }
 
 
@@ -126,12 +120,22 @@ def grad_date():
     date.config(text = "Selected Date is: " + cal.get_date()) 
     date_c = cal.get_date()
     date_list = date_c.split(".")
+    month = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC']
 
     file_start = str(y) + date_list[1] + date_list[0]
     file_end = "*.xml"
-    os.chdir('\\\\150.1.62.26\\2021\APR-21')
+
+
+    ch_dir = '\\\\150.1.62.26\\'+str(y)+'\\'+ month[int(date_list[1])-1] + '-' + date_list[2]
+
+    #creating month folder in required destination using date format
+    if not os.path.exists(ch_dir):
+        os.mkdir(ch_dir) 
     
-    #creating folder in required destination using date format
+    os.chdir(ch_dir)
+    
+
+    #creating date folder in required destination using date format
     if not os.path.exists(date_c):
         os.mkdir(date_c) 
 
@@ -141,13 +145,13 @@ def grad_date():
     #src = "E:\Projects\LimitPY\FinalProjectBefore_run\src\\"
     #dst = "E:\Projects\LimitPY\FinalProjectBefore_run\dst"
 
-    dst = "\\\\150.1.62.26\\2021\APR-21\\" + date_c
+    dst = ch_dir + "\\" + date_c
     #dst = "\\\\150.1.62.26\\2021\MAR-21\\" + "test"
 
     cmd = "copy " + src + file_start + file_end +' '+ dst
     os.system(cmd)
 
-    os.chdir('\\\\150.1.62.26\\2021\APR-21\\'+ date_c)
+    os.chdir(dst)
 
     cli_files = os.listdir('.')
 
